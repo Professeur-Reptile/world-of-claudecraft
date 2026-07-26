@@ -2841,13 +2841,19 @@
      #minimap-zoom. z-index 3 puts it on the same rim layer as the badges, above
      both the gilded ::before ring and the zoom pill. The explicit line-height
      undoes #minimap-disc's `line-height: 0` (a canvas wrapper), which would
-     otherwise collapse the digits. */
+     otherwise collapse the digits. `white-space: nowrap` is load-bearing, not
+     cosmetic: an absolutely positioned box with `left: 50%` shrink-to-fits
+     against only the REMAINING half of the containing block (85px of the disc),
+     which a 12-hour readout like "10:13 PM" overflows, wrapping the pill onto two
+     lines and pushing it over #minimap-coords. Reproduced at iPhone-12-mini
+     metrics. */
   #minimap-clock {
     position: absolute;
     left: 50%;
     bottom: -3px;
     z-index: 3;
     transform: translateX(-50%);
+    white-space: nowrap;
     min-width: 52px;
     padding: 1px 8px;
     cursor: pointer;

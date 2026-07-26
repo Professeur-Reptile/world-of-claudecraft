@@ -84,6 +84,23 @@ describe('minimap clock visibility', () => {
     expect(clock.bottom).toBeLessThanOrEqual(disc.bottom + 6);
   });
 
+  it('renders the widest readout on a single line', () => {
+    // `left: 50%` leaves an absolutely positioned box only the REMAINING half of
+    // #minimap-disc (85px) to shrink-to-fit into, which the 12-hour format
+    // overflows. Counting the text node's client rects is the honest check: a
+    // wrapped text node yields one rect PER LINE, while the element's own
+    // getBoundingClientRect stays a single healthy box either way.
+    const clock = el('minimap-clock');
+    clock.textContent = '10:13 PM';
+
+    const range = document.createRange();
+    range.selectNodeContents(clock);
+    expect(range.getClientRects().length).toBe(1);
+
+    // ...and the pill must still clear the coords row it would otherwise spill onto.
+    expect(overlaps(rect('minimap-clock'), rect('minimap-coords'))).toBe(false);
+  });
+
   it('does not collide with the coordinate readout below it (desktop)', () => {
     // #minimap-coords is in normal flow right under the disc; the clock hangs
     // past the rim, so a too-large negative offset would sit on top of it.

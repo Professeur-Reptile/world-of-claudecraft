@@ -91,14 +91,26 @@ describe('minimap clock placement', () => {
     expect(zoomRule).toMatch(/z-index:\s*2/);
   });
 
+  it('keeps the readout on one line inside the half-width shrink-to-fit', () => {
+    // An absolutely positioned box with `left: 50%` shrink-to-fits against only
+    // the REMAINING half of its containing block, i.e. 85px of the 170px disc. A
+    // 12-hour readout ("10:13 PM") is wider than that, so without nowrap the pill
+    // wraps to two lines and spills over #minimap-coords. Caught at
+    // iPhone-12-mini metrics, not on desktop, where the 24-hour default fits.
+    expect(ruleBody(hudCss, '#minimap-clock')).toMatch(/white-space:\s*nowrap/);
+  });
+
   it('does not re-parent the clock into flow on mobile touch', () => {
     // The old mobile rule made the clock a static flex child ordered under the
     // compass. That only worked while it was a direct child of the flex
     // #minimap-wrap; inside #minimap-disc `order` is inert, `position: static`
     // drops it into the canvas's flow, and `transform: none` would also cancel
-    // the translateX(-50%) that centres it on the rim.
-    const mobile = hudMobileCss.slice(hudMobileCss.indexOf('body.mobile-touch #minimap-clock'));
-    const rule = mobile.slice(0, mobile.indexOf('}') + 1);
+    // the translateX(-50%) that centres it on the rim. Today there is no mobile
+    // rule at all, which satisfies this; assert that explicitly rather than
+    // slicing from a -1 indexOf, which would pass vacuously either way.
+    const at = hudMobileCss.indexOf('body.mobile-touch #minimap-clock {');
+    if (at === -1) return;
+    const rule = hudMobileCss.slice(at, hudMobileCss.indexOf('}', at) + 1);
     expect(rule).not.toMatch(/position:\s*static/);
     expect(rule).not.toMatch(/transform:\s*none/);
     expect(rule).not.toMatch(/order:/);

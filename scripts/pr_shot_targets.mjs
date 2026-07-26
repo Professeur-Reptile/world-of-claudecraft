@@ -830,6 +830,34 @@ export const TARGETS = [
     },
   },
   {
+    key: 'minimap-clock',
+    label: 'Minimap local-time clock (rim readout)',
+    // Keyed on the feature's own test path (the market-collect-indicator pattern)
+    // so a broad styles diff does not drag this focused shot along.
+    when: ['tests/minimap_clock_placement.test.ts'],
+    variants: [{ key: 'desktop' }, { key: 'mobile', mobile: true }],
+    // No bring-up: the clock paints itself from the real wall clock on the HUD's
+    // slow band, so the shot only has to wait for the first non-placeholder text.
+    // Both variants clip to the minimap cluster because the clock is a rim
+    // element INSIDE #minimap-wrap's box on every viewport.
+    async capture(page) {
+      const painted = await page
+        .waitForFunction(
+          () => {
+            const el = document.querySelector('#minimap-clock');
+            return !!el && /\d/.test(el.textContent ?? '');
+          },
+          { timeout: 5000 },
+        )
+        .then(
+          () => true,
+          () => false,
+        );
+      if (!painted) throw new Error('#minimap-clock never painted a real time');
+      return { clip: '#minimap-wrap' };
+    },
+  },
+  {
     key: 'card-duel',
     label: 'Card Duel window (Card Master)',
     when: [

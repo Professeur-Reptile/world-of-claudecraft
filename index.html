@@ -287,6 +287,12 @@
              surface is the adjacent #zone-label + #minimap-coords (role=status), with the fully
              accessible #map-window as the alternative, per the zone-label decision. -->
         <canvas id="minimap" width="162" height="162" aria-hidden="true"></canvas>
+        <!-- Local-time readout, a rim element of the round map like the badges
+             below: it must live INSIDE #minimap-disc so its negative `bottom`
+             resolves against the canvas box. As a sibling it resolved against the
+             taller #minimap-wrap and landed underneath the zoom pill, which paints
+             over it at z-index 2, so no time was visible on desktop at all. -->
+        <div id="minimap-clock" data-i18n-title="hudChrome.widgets.clockTitle" title="Local time - click to toggle 12/24-hour">--:--</div>
         <button id="raid-lockout" type="button" hidden data-i18n-title="hudChrome.raidLockout.title" data-i18n-aria="hudChrome.raidLockout.title" title="Raid Lockouts" aria-label="Raid Lockouts"></button>
         <!-- Ravenpost envelope: visible while unread letters wait; opens the mailbox
              window, which explains when the player is too far from a mailbox. -->
@@ -296,7 +302,6 @@
              is informational only (the tooltip) anywhere else. -->
         <button id="market-indicator" type="button" hidden data-icon="market" aria-live="polite" data-i18n-title="hudChrome.marketIndicator.tip" data-i18n-aria="hudChrome.marketIndicator.aria" title="Gold or items are waiting for you at the Merchant." aria-label="World Market collection waiting"></button>
       </div>
-      <div id="minimap-clock" data-i18n-title="hudChrome.widgets.clockTitle" title="Local time — click to toggle 12/24-hour">--:--</div>
       <div id="minimap-coords" role="status" data-i18n-title="hudChrome.widgets.worldCoordinates" data-i18n-aria="hudChrome.widgets.coordinates" title="Your current world coordinates" aria-label="Coordinates">0, 0</div>
       <div id="compass" role="img" data-i18n-aria="hudChrome.widgets.heading" aria-label="Heading">
         <div id="compass-strip"><div id="compass-track"></div></div>

@@ -2835,11 +2835,18 @@
       0 0 14px #000c,
       inset 0 0 20px #0008;
   }
-  /* Digital clock pinned to the bottom of the minimap ring, classic style. */
+  /* Digital clock pinned to the bottom of the minimap ring, classic style. It is
+     a CHILD of #minimap-disc (see index.html), so this offset resolves against the
+     canvas box; as a sibling it resolved against #minimap-wrap and stacked under
+     #minimap-zoom. z-index 3 puts it on the same rim layer as the badges, above
+     both the gilded ::before ring and the zoom pill. The explicit line-height
+     undoes #minimap-disc's `line-height: 0` (a canvas wrapper), which would
+     otherwise collapse the digits. */
   #minimap-clock {
     position: absolute;
     left: 50%;
     bottom: -3px;
+    z-index: 3;
     transform: translateX(-50%);
     min-width: 52px;
     padding: 1px 8px;
@@ -2847,6 +2854,7 @@
     user-select: none;
     font-family: var(--font-ui);
     font-size: 12px;
+    line-height: 1.35;
     font-weight: 600;
     letter-spacing: 0.4px;
     color: var(--gold);

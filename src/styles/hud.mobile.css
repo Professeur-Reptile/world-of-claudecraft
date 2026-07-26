@@ -2033,11 +2033,13 @@
   body.mobile-touch #compass {
     order: 3;
   }
+  /* The clock is a rim element of #minimap-disc on every viewport, so touch keeps
+     the desktop anchoring (the old rule made it a static flex child ordered under
+     the compass, which only worked while it was a direct child of this flex wrap;
+     `transform: none` there would now also cancel the centring translate). Touch
+     hides #minimap-zoom, so the rim is uncontested. */
   body.mobile-touch #minimap-clock {
-    position: static;
-    order: 4;
-    transform: none;
-    margin: 5px auto 0;
+    font-size: 13px;
   }
   /* The minimap wrapper is scaled down on touch, so counter-scale the disc
      controls and place them in a row below the aura strip, left of the map. */
